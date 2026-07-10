@@ -1,5 +1,6 @@
 // Vercel serverless function: POST /api/submit-score
-// Body: { userId: string, username: string, avatarUrl?: string, totalValue: number, nativeValue: number }
+// Body: { userId: string, username: string, avatarUrl?: string, totalValue: number, nativeValue: number,
+//         premierRating?: number, premierRankId?: number }
 //
 // Upserts one leaderboard entry per userId, ranked by totalValue, using Vercel KV (Upstash
 // Redis under the hood). This is the write side the userscript calls after every "Scan All".
@@ -33,7 +34,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { userId, username, avatarUrl, totalValue, nativeValue } = req.body || {};
+    const { userId, username, avatarUrl, totalValue, nativeValue, premierRating, premierRankId } = req.body || {};
 
     if (!userId || typeof userId !== 'string') {
       return res.status(400).json({ error: 'userId is required' });
@@ -48,6 +49,8 @@ export default async function handler(req, res) {
         username: typeof username === 'string' && username ? username : 'Unknown',
         avatarUrl: typeof avatarUrl === 'string' ? avatarUrl : '',
         nativeValue: typeof nativeValue === 'number' && isFinite(nativeValue) ? nativeValue : totalValue,
+        premierRating: typeof premierRating === 'number' && isFinite(premierRating) ? premierRating : '',
+        premierRankId: typeof premierRankId === 'number' && isFinite(premierRankId) ? premierRankId : '',
         updatedAt: new Date().toISOString(),
       }),
     ]);

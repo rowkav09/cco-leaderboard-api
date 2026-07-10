@@ -1,5 +1,6 @@
 // Vercel serverless function: GET /api/leaderboard?limit=50
-// Response: { entries: [{ rank, userId, username, avatarUrl, totalValue, nativeValue, updatedAt }] }
+// Response: { entries: [{ rank, userId, username, avatarUrl, totalValue, nativeValue,
+//                          premierRating, premierRankId, updatedAt }] }
 //
 // Read side for the userscript's "Pricedata Value" category on /leaderboard. Reads the
 // sorted set written by submit-score.js, highest totalValue first, and joins in the display
@@ -44,6 +45,8 @@ export default async function handler(req, res) {
         avatarUrl: meta.avatarUrl || null,
         totalValue: scoreByUser[userId],
         nativeValue: meta.nativeValue != null ? Number(meta.nativeValue) : scoreByUser[userId],
+        premierRating: meta.premierRating !== '' && meta.premierRating != null ? Number(meta.premierRating) : null,
+        premierRankId: meta.premierRankId !== '' && meta.premierRankId != null ? Number(meta.premierRankId) : null,
         updatedAt: meta.updatedAt || null,
       };
     });
