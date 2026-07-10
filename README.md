@@ -7,9 +7,13 @@ Two Vercel serverless functions backing the userscript's "Pricedata Value" leade
 1. Import this repo into Vercel (New Project -> pick `cco-leaderboard-api`). `package.json`
    already declares the `@vercel/kv` dependency, so Vercel installs it automatically at
    build time — no local `npm install` needed unless you want to run it locally too.
-2. In the Vercel dashboard: **Storage** tab -> **Create Database** -> **KV**. Connect it to
-   this project — Vercel auto-injects `KV_REST_API_URL` and `KV_REST_API_TOKEN` for you.
-3. Deploy.
+2. "Vercel KV" as a standalone product was retired (Dec 2024) — key-value storage now comes
+   through the Marketplace. In the Vercel dashboard: **Storage** tab -> add an integration ->
+   **Upstash** -> choose the **Redis** product (internal slug is still `upstash-kv`) -> create
+   or link a database -> connect it to this project. This injects `KV_REST_API_URL` and
+   `KV_REST_API_TOKEN` for backward compatibility, which is exactly what `@vercel/kv` (used in
+   both function files) reads — no code changes needed.
+3. Redeploy if it doesn't happen automatically after connecting the integration.
 4. In the userscript, set `CONFIG.LEADERBOARD_API_BASE` to your deployment's base URL, e.g.
    `https://your-project.vercel.app` (no trailing slash). Leave it blank to keep the whole
    leaderboard feature disabled.
